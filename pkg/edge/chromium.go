@@ -4,6 +4,7 @@
 package edge
 
 import (
+	"github.com/lxn/win"
 	"log"
 	"os"
 	"path/filepath"
@@ -149,11 +150,15 @@ func (e *Chromium) Eval(script string) {
 }
 
 func (e *Chromium) Show() error {
-	return e.controller.PutIsVisible(true)
+	hwnd := win.HWND(e.hwnd)
+	win.ShowWindow(hwnd, win.SW_RESTORE)
+	win.SetWindowPos(hwnd, win.HWND_TOPMOST, 0, 0, 0, 0, win.SWP_NOSIZE|win.SWP_NOMOVE)
+	return nil
 }
 
 func (e *Chromium) Hide() error {
-	return e.controller.PutIsVisible(false)
+	win.ShowWindow(win.HWND(e.hwnd), win.SW_HIDE)
+	return nil
 }
 
 func (e *Chromium) QueryInterface(_, _ uintptr) uintptr {

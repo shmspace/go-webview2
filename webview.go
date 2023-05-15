@@ -44,6 +44,8 @@ type browser interface {
 	Eval(script string)
 	NotifyParentWindowPositionChanged() error
 	Focus()
+	Show() error
+	Hide() error
 }
 
 type webview struct {
@@ -94,8 +96,10 @@ func NewWindow(debug bool, window unsafe.Pointer) WebView {
 }
 
 // NewWithOptions creates a new webview using the provided options.
+// var wvList []*webview
 func NewWithOptions(options WebViewOptions) WebView {
 	w := &webview{}
+	//wvList = append(wvList, w)
 	w.bindings = map[string]interface{}{}
 	w.autofocus = options.AutoFocus
 
@@ -479,4 +483,12 @@ func (w *webview) Bind(name string, f interface{}) error {
 	})()`)
 
 	return nil
+}
+
+func (w *webview) Show() error {
+	return w.browser.Show()
+}
+
+func (w *webview) Hide() error {
+	return w.browser.Hide()
 }
